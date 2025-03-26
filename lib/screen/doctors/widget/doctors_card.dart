@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/screen/doctors/widget/book_now.dart';
 
 class DoctorsCard extends StatelessWidget {
   final String name;
@@ -101,7 +102,7 @@ class DoctorsCard extends StatelessWidget {
                       Icon(Icons.star, color: Colors.orange.shade400, size: 18),
                       const SizedBox(width: 4),
                       Text(
-                        rating + '  |  ' + experience,
+                        '$rating  |  $experience',
                         style: TextStyle(fontSize: 13, color: Colors.black87),
                       ),
                     ],
@@ -157,9 +158,14 @@ class DoctorsCard extends StatelessWidget {
                 ),
                 elevation: 4,
               ),
-              child: const Text(
-                "Book Now",
-                style: TextStyle(color: Colors.white, fontSize: 14),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BookAppointmentScreen(name: name, specialization: specialization, fee: price,)));
+                },
+                child: const Text(
+                  "Book Now",
+                  style: TextStyle(color: Colors.white, fontSize: 14),
+                ),
               ),
             ),
           ],
