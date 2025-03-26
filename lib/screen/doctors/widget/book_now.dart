@@ -235,6 +235,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
+                    color: Colors.white
                   ),
                 ),
               ),

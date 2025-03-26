@@ -144,7 +144,7 @@ class PaymentScreen extends StatelessWidget {
                       onPressed: () {
                         // Handle UPI Payment Logic Here
                       },
-                      child: Text("Pay Now", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                      child: Text("Pay Now", style: TextStyle(fontSize: 18,color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: 1)),
                     ),
                   ),
                 ],

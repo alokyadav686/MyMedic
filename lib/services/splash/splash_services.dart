@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_medic/components/bottom_nav_bar.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/onboarding/onboarding.dart';
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
 
@@ -20,7 +21,7 @@ class _SplashscreenState extends State<Splashscreen> {
     Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => BottomNavBar()),
+        MaterialPageRoute(builder: (context) => OnboardingScreen()),
       );
     });
   }
@@ -43,13 +44,6 @@ class _SplashscreenState extends State<Splashscreen> {
                 color: AppColors.White,
               ),
             ),
-            
-            // Text("Say No To Rental Drama",
-            // style: TextStyle(
-            //     fontSize: 15,
-            //     fontWeight: FontWeight.w600,
-            //     color: AppColors.White
-            //   ),),
           ],
         ),
       ),

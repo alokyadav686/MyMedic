@@ -9,6 +9,7 @@ class DoctorsCard extends StatelessWidget {
   final String experience;
   final String location;
   final String price;
+  final String image;
 
   const DoctorsCard({
     required this.name,
@@ -17,6 +18,7 @@ class DoctorsCard extends StatelessWidget {
     required this.experience,
     required this.location,
     required this.price,
+    required this.image,
     super.key,
   });
 
@@ -64,14 +66,7 @@ class DoctorsCard extends StatelessWidget {
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: AppColors.primaryColor,
-                child: Text(
-                  "PS",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                backgroundImage: AssetImage('assets/images/default_avatar.png'),
               ),
             ),
             const SizedBox(width: 16),
@@ -119,7 +114,9 @@ class DoctorsCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        location,
+                        location.length > 15
+                            ? '${location.substring(0, 15)}...'
+                            : location,
                         style: TextStyle(fontSize: 13, color: Colors.black87),
                       ),
                     ],
@@ -160,7 +157,17 @@ class DoctorsCard extends StatelessWidget {
               ),
               child: InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>BookAppointmentScreen(name: name, specialization: specialization, fee: price,)));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => BookAppointmentScreen(
+                            name: name,
+                            specialization: specialization,
+                            fee: price,
+                          ),
+                    ),
+                  );
                 },
                 child: const Text(
                   "Book Now",

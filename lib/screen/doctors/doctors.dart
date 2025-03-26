@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_medic/constants/colors.dart';
 import 'package:my_medic/screen/doctors/widget/doctors_card.dart';
 import 'package:my_medic/screen/home/widgets/custom_header.dart';
+import 'package:my_medic/services/api/api_services.dart' as ApiService;
 
 class Doctors extends StatefulWidget {
   const Doctors({super.key});
@@ -12,6 +13,23 @@ class Doctors extends StatefulWidget {
 
 class _DoctorsState extends State<Doctors> {
   bool showFilters = false;
+  List<dynamic> doctorlist = [];
+  bool isLoading = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchDoctors();
+  }
+
+  void fetchDoctors() async {
+    List<dynamic> data = await ApiService.getDoctor();
+
+    setState(() {
+      doctorlist = data;
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +40,7 @@ class _DoctorsState extends State<Doctors> {
         title: CustomHeader(),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,9 +98,7 @@ class _DoctorsState extends State<Doctors> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 10,
-                ), // Space between search bar and filter button
+                SizedBox(width: 10),
                 // Filter Button
                 Container(
                   height: 50,
@@ -140,7 +156,13 @@ class _DoctorsState extends State<Doctors> {
                             ),
                           ),
                           items:
-                              ["Cardiologist","Physiatrist", "Dermatologist","Sexologist", "Neurologist"]
+                              [
+                                    "Cardiologist",
+                                    "Physiatrist",
+                                    "Dermatologist",
+                                    "Sexologist",
+                                    "Neurologist",
+                                  ]
                                   .map(
                                     (category) => DropdownMenuItem(
                                       value: category,
@@ -156,7 +178,7 @@ class _DoctorsState extends State<Doctors> {
                       ),
 
                       SizedBox(width: 8), // Space between dropdowns
-                      
+
                       Expanded(
                         child: DropdownButtonFormField<String>(
                           isDense: true,
@@ -191,43 +213,31 @@ class _DoctorsState extends State<Doctors> {
               ),
             ),
 
-            SizedBox(height: 20),
-
-            // Doctor List
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    DoctorsCard(
-                      name: 'Dr. Priya Sharma',
-                      specialization: 'Cardiologist',
-                      rating: '4.8',
-                      experience: '9 years',
-                      location: 'North West Delhi',
-                      price: '₹ 1500',
-                    ),
-                    SizedBox(height: 20),
-                    DoctorsCard(
-                      name: 'Dr. Alok Yadav',
-                      specialization: 'Cardiologist',
-                      rating: '4.8',
-                      experience: '9 years',
-                      location: 'North West Delhi',
-                      price: '₹ 1500',
-                    ),
-                    SizedBox(height: 20),
-                    DoctorsCard(
-                      name: 'Dr. Priya Sharma',
-                      specialization: 'Cardiologist',
-                      rating: '4.8',
-                      experience: '9 years',
-                      location: 'North West Delhi',
-                      price: '₹ 1500',
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
+              child:
+                  isLoading
+                      ? Center(
+                        child: CircularProgressIndicator(),
+                      ) // Show loader while fetching data
+                      : doctorlist.isEmpty
+                      ? Center(
+                        child: Text("No doctors found"),
+                      ) // Show message if no doctors
+                      : ListView.builder(
+                        itemCount: doctorlist.length,
+                        itemBuilder: (context, index) {
+                          var doctorData = doctorlist[index];
+                          return DoctorsCard(
+                            name: doctorData['name'],
+                            specialization: doctorData['specialization'],
+                            rating: doctorData['rating'].toString(),
+                            experience: doctorData['experience'].toString(),
+                            location: doctorData['location'],
+                            price: doctorData['price'].toString(),
+                            image: doctorData['image'].toString(),
+                          );
+                        },
+                      ),
             ),
           ],
         ),

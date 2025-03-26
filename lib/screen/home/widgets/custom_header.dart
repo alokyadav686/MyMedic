@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/screen/chatbot/chatbot.dart';
 
 class CustomHeader extends StatelessWidget {
   const CustomHeader({super.key});
@@ -31,7 +32,7 @@ class CustomHeader extends StatelessWidget {
           ),
           InkWell(
             onTap: () {
-              
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatBotApp()));
             },
             child: SizedBox(
               height: 40,
