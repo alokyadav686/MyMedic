@@ -68,7 +68,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           _buildNavItem(Icons.home, "Home", 0),
           _buildNavItem(Icons.pie_chart, "Doctors", 1),
           _buildNavItem(Icons.article, "Medicines", 2),
-          _buildNavItem(Icons.person, "Appointment", 3),
+          _buildNavItem(Icons.person, "Profile", 3),
         ],
       ),
     );

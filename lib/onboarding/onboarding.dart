@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/components/bottom_nav_bar.dart';
+import 'package:my_medic/constants/colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -51,12 +52,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         Text(
                           "Skip",
-                          style: TextStyle(fontSize: 16, color: Colors.green),
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         Icon(
                           Icons.arrow_forward_ios,
                           size: 16,
-                          color: Colors.green,
+                          color: AppColors.primaryColor,
                         ),
                       ],
                     ),

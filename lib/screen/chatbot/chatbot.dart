@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:my_medic/components/bottom_nav_bar.dart';
 import 'package:my_medic/constants/colors.dart';
-import 'package:my_medic/screen/home/home.dart';
-import 'package:my_medic/screen/home/widgets/custom_header.dart';
 
 class ChatBotApp extends StatelessWidget {
   const ChatBotApp({super.key});
@@ -55,7 +52,7 @@ class _ChatScreenState extends State<ChatScreen> {
           onTap: () {
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
           },
-          child: Icon(Icons.arrow_back_ios_sharp, color: Colors.white, size: 24, )),
+          child: Icon(Icons.arrow_back_ios_sharp, color: Colors.white, size: 2, )),
         centerTitle: true,
       ),
       body: Column(
