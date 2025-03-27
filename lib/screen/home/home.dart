@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/components/name_header.dart';
 import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/instant_checkup/instant_checkup.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to Dashboard
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HealthCheckupForm()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
