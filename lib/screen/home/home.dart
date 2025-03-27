@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_medic/components/name_header.dart';
 import 'package:my_medic/constants/colors.dart';
-import 'package:my_medic/screen/home/widgets/custom_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,8 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        title: CustomHeader(),
+        backgroundColor: Colors.white,
+        title: NameHeader(),
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/constants/colors.dart';
-import 'package:my_medic/screen/appointment/appointment.dart';
 import 'package:my_medic/screen/doctors/doctors.dart';
 import 'package:my_medic/screen/home/home.dart';
 import 'package:my_medic/screen/medicines/medicine.dart';
+import 'package:my_medic/screen/profile/profile_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -20,7 +20,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     HomeScreen(),
     Doctors(),
     Medicine(),
-    Appointment(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

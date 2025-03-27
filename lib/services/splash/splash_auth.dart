@@ -1,40 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:my_medic/components/bottom_nav_bar.dart';
-import 'package:my_medic/login/login_screen.dart';
+import 'package:my_medic/login/welcome.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
+import 'package:my_medic/components/bottom_nav_bar.dart';
 
 class SplashServices {
   Future<void> isLogin(BuildContext context) async {
-    final bool isAuthenticated = await AuthStorage.getAuthStatus();
+    try {
+      // Ensure SharedPreferences is initialized before use
+      await AuthStorage.init();
 
-    if (isAuthenticated) {
+      bool isAuthenticated = await AuthStorage.getAuthStatus();
+
+      await Future.delayed(Duration(seconds: 2)); // Add delay for splash effect
+
+      if (!context.mounted) return; // Ensure context is valid before navigation
+
+      if (isAuthenticated) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavBar()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => WelcomeScreen()),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      if (!context.mounted) return;
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => BottomNavBar()));
-    } else {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        context,
+        MaterialPageRoute(builder: (context) => WelcomeScreen()),
+      );
     }
   }
 }
 
 class AuthStorage {
+  static SharedPreferences? _prefs;
+
+  // Initialize SharedPreferences
+  static Future<void> init() async {
+    _prefs ??= await SharedPreferences.getInstance();
+  }
+
   // Save authentication status
   static Future<void> setAuthStatus(bool isAuthenticated) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("isAuthenticated", isAuthenticated);
+    if (_prefs == null) await init(); // Ensure it's initialized
+    await _prefs?.setBool("isAuthenticated", isAuthenticated);
   }
 
   // Get authentication status
   static Future<bool> getAuthStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool("isAuthenticated") ?? false; // Default to false
+    if (_prefs == null) await init(); // Ensure it's initialized
+    return _prefs?.getBool("isAuthenticated") ?? false;
   }
 
   // Clear authentication status (for logout)
   static Future<void> clearAuthStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("isAuthenticated");
+    if (_prefs == null) await init(); // Ensure it's initialized
+    await _prefs?.remove("isAuthenticated");
   }
 }

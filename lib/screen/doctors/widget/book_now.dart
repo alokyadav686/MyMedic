@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/components/name_header_without_chatbot.dart';
 import 'package:my_medic/screen/doctors/widget/payment_screen.dart';
-import 'package:my_medic/screen/home/widgets/custom_header.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
   final String name;
@@ -75,12 +74,12 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        title: CustomHeader(),
+        backgroundColor: Colors.white,
+        title: NameHeaderWithoutChatbot(),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -129,7 +128,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                             ),
                           ),
                           Text(
-                            "with " + widget.name,
+                            "with ${widget.name}",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

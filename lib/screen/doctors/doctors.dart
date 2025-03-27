@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/components/name_header.dart';
 import 'package:my_medic/screen/doctors/widget/doctors_card.dart';
-import 'package:my_medic/screen/home/widgets/custom_header.dart';
 import 'package:my_medic/services/api/api_services.dart' as ApiService;
 
 class Doctors extends StatefulWidget {
@@ -34,10 +33,11 @@ class _DoctorsState extends State<Doctors> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        title: CustomHeader(),
+        backgroundColor: Colors.white,
+        title: NameHeader(),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),

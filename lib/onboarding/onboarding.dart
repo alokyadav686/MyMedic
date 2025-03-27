@@ -3,6 +3,8 @@ import 'package:my_medic/constants/colors.dart';
 import 'package:my_medic/services/splash/splash_auth.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
@@ -10,9 +12,9 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int key = 0;
   final SplashServices splashServices = SplashServices();
+
   @override
   Widget build(BuildContext context) {
-    // ignore: non_constant_identifier_names
     final images = [
       "assets/images/ChooseYourDoctor1.png",
       "assets/images/ScheduleYourAppointments1.png",
@@ -42,8 +44,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
-                    onPressed: () {
-                      splashServices.isLogin(context);
+                    onPressed: () async {
+                      await splashServices.isLogin(context);
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -61,56 +63,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: screenHeight*0.02),
+                SizedBox(height: screenHeight * 0.02),
 
                 // Illustration Image (Replace with your asset)
                 Container(
-                  height: screenHeight*0.4,
+                  height: screenHeight * 0.4,
                   decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage('assets/images/bgsplash.png')),
-                    // color: Colors.red
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/bgsplash.png'),
+                    ),
                   ),
+                  child: Image.asset(images[key], height: 250),
+                ),
 
-                  child: Image.asset(images[key], height: 250)),
-
-                SizedBox(height: screenHeight*0.05),
+                SizedBox(height: screenHeight * 0.05),
                 Text(
                   heading[key],
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.green[900],
-                    
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: screenHeight*0.01),
+                SizedBox(height: screenHeight * 0.01),
                 Text(
                   titles[key],
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 14, color: Colors.black54),
                 ),
-                SizedBox(height: screenHeight*0.025),
+                SizedBox(height: screenHeight * 0.025),
 
                 // Dots Indicator
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(3, (index) => buildDot(index == key)),
                 ),
-                SizedBox(height: screenHeight*0.03),
+                SizedBox(height: screenHeight * 0.03),
 
                 // Next Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (key == 2) {
-                        splashServices.isLogin(context);
+                        await splashServices.isLogin(context);
                       } else {
                         setState(() {
                           key += 1;
                         });
+                        
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -146,3 +149,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
+ 

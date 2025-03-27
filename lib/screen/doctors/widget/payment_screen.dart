@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_medic/constants/colors.dart';
-import 'package:my_medic/screen/home/widgets/custom_header.dart';
+import 'package:my_medic/components/name_header_without_chatbot.dart';
 
 class PaymentScreen extends StatelessWidget {
   final String doctorName;
@@ -21,12 +20,12 @@ class PaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
        appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        title: CustomHeader(),
+        backgroundColor: Colors.white,
+        title: NameHeaderWithoutChatbot(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -89,7 +88,7 @@ class PaymentScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "$fee",
+                          fee,
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green),
                         ),
                       ],

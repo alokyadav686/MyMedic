@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_medic/components/bottom_nav_bar.dart';
 import 'package:my_medic/signUP/signup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -13,11 +18,68 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool rememberMe = false;
+  bool _isLoading = false;
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      // Perform login action
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
+  static const String loginApi =
+      "https://mediconnect-pn3n.onrender.com/user/login";
+
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      var response = await http.post(
+        Uri.parse(loginApi),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": emailController.text,
+          "password": passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response body
+        var data = jsonDecode(response.body);
+
+        // Save name & email to SharedPreferences
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userEmail', emailController.text);
+        await prefs.setString(
+          'userName',
+          data['name'],
+        ); // Assuming API returns {"name": "John Doe"}
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Login successful!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Navigate to Bottom Navigation Bar (Dashboard)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BottomNavBar()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Login failed: ${response.body}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -50,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       "Login",
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -62,11 +127,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         border: UnderlineInputBorder(),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty)
                           return "Please enter your email";
-                        } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value))
                           return "Enter a valid email address";
-                        }
                         return null;
                       },
                     ),
@@ -74,18 +138,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormField(
                       controller: passwordController,
                       obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         labelText: "Password",
                         prefixIcon: Icon(Icons.lock),
                         border: UnderlineInputBorder(),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.isEmpty)
                           return "Please enter your password";
-                        } else if (value.length < 6) {
+                        if (value.length < 6)
                           return "Password must be at least 6 characters";
-                        }
                         return null;
                       },
                     ),
@@ -120,11 +182,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.green,
                           padding: EdgeInsets.symmetric(vertical: 15),
                         ),
-                        onPressed: _login,
-                        child: Text(
-                          "Login",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+                        onPressed: _isLoading ? null : _login,
+                        child:
+                            _isLoading
+                                ? CircularProgressIndicator(color: Colors.white)
+                                : Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -134,13 +202,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Text(
                             "Don't have an Account? ",
-                            style: TextStyle(fontSize: 14, color: Colors.black54),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(builder: (context) => SignUpScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpScreen(),
+                                ),
                               );
                             },
                             child: Text(

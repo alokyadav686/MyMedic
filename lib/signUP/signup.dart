@@ -1,20 +1,25 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:my_medic/login/login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
+
+  static const String signupApi = "https://mediconnect-pn3n.onrender.com/user/signup";
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -22,15 +27,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
-  }
+  Future<void> _signUp() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  void _signUp() {
-    if (_formKey.currentState!.validate()) {
-      print("Sign-Up Successful with Email: ${emailController.text}");
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      var response = await http.post(
+        Uri.parse(signupApi),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": nameController.text,
+          "email": emailController.text,
+          "password": passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Signup successful!"), backgroundColor: Colors.green),
+        );
+
+        // Navigate to the login screen after signup
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Signup failed: ${response.body}"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -67,6 +107,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     SizedBox(height: 20),
 
+                    // Name Field
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: "Name",
+                        prefixIcon: Icon(Icons.person),
+                        border: UnderlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your name";
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+
                     // Email Field
                     TextFormField(
                       controller: emailController,
@@ -81,26 +138,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           return "Please enter your email";
                         } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                           return "Enter a valid email address";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 10),
-
-                    // Phone Number Field
-                    TextFormField(
-                      controller: phoneController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: "Phone no",
-                        prefixIcon: Icon(Icons.phone),
-                        border: UnderlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your phone number";
-                        } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
-                          return "Enter a valid 10-digit phone number";
                         }
                         return null;
                       },
@@ -129,46 +166,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
-
-                    // Confirm Password Field
-                    TextFormField(
-                      controller: confirmPasswordController,
-                      obscureText: _obscureConfirmPassword,
-                      decoration: InputDecoration(
-                        labelText: "Confirm Password",
-                        prefixIcon: Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(_obscureConfirmPassword ? Icons.visibility_off : Icons.visibility),
-                          onPressed: _toggleConfirmPasswordVisibility,
-                        ),
-                        border: UnderlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please confirm your password";
-                        } else if (value != passwordController.text) {
-                          return "Passwords do not match";
-                        }
-                        return null;
-                      },
-                    ),
                     SizedBox(height: 20),
 
                     // Create Account Button
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                        ),
-                        onPressed: _signUp,
-                        child: Text(
-                          "Create Account",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
+                      child: _isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                              ),
+                              onPressed: _signUp,
+                              child: Text(
+                                "Create Account",
+                                style: TextStyle(color: Colors.white, fontSize: 18),
+                              ),
+                            ),
                     ),
                     SizedBox(height: 20),
 
