@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:my_medic/components/bottom_nav_bar.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:my_medic/constants/colors.dart';
 import 'package:my_medic/onboarding/onboarding.dart';

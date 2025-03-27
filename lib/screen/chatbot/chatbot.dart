@@ -139,7 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                         child: Text(
-                          "Typing$typingText", // Displays dots after "Typing"
+                          "Typing$typingText", 
                           style: TextStyle(fontSize: 16, color: Colors.black87),
                         ),
                       ),

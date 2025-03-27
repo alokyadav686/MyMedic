@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_medic/components/bottom_nav_bar.dart';
 import 'package:my_medic/constants/colors.dart';
+import 'package:my_medic/services/splash/splash_auth.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -9,6 +9,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   int key = 0;
+  final SplashServices splashServices = SplashServices();
   @override
   Widget build(BuildContext context) {
     // ignore: non_constant_identifier_names
@@ -42,10 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavBar()),
-                      );
+                      splashServices.isLogin(context);
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -108,12 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (key == 2) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BottomNavBar(),
-                          ),
-                        );
+                        splashServices.isLogin(context);
                       } else {
                         setState(() {
                           key += 1;
