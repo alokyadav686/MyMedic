@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_medic/components/bottom_nav_bar.dart';
+import 'package:my_medic/constants/colors.dart';
 import 'package:my_medic/services/api/api_services.dart' as ApiService;
 
 class HealthCheckupForm extends StatefulWidget {
@@ -47,8 +49,18 @@ class _HealthCheckupFormState extends State<HealthCheckupForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instant Health Checkup'),
-        backgroundColor: Colors.green,
+        title: const Text(
+          'Instant Health Checkup',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          color: Colors.white,
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
+        backgroundColor: AppColors.primaryColor,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

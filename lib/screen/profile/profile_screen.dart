@@ -129,7 +129,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.location_on,
                     text: 'Your Addresses',
                   ),
+                  const Divider(),
                   const SizedBox(height: 20),
+
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
