@@ -12,7 +12,6 @@ class BookAppointmentScreen extends StatefulWidget {
     required this.name,
     required this.specialization,
     required this.fee,
-
     super.key,
   });
 
@@ -21,6 +20,8 @@ class BookAppointmentScreen extends StatefulWidget {
 }
 
 class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
+  final _formKey = GlobalKey<FormState>(); // Form Key
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -53,6 +54,24 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     }
   }
 
+  void _confirmBooking() {
+    if (_formKey.currentState!.validate()) {
+      // Navigate only if form is valid
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentScreen(
+            doctorName: widget.name,
+            specialization: widget.specialization,
+            fee: widget.fee,
+            appointmentDate: _dateController.text,
+            appointmentTime: selectedTime ?? "10:00 AM",
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,8 +84,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
+        
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Doctor Card
             Container(
@@ -162,82 +181,106 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
               ),
             ),
             SizedBox(height: 20),
-
-            // Input Fields
-            _buildTextField("Full Name", _nameController, Icons.person),
-            _buildTextField("Email", _emailController, Icons.email),
-            _buildTextField("Phone Number", _phoneController, Icons.phone),
-            _buildDateField(context),
-
-            // Preferred Time Dropdown
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: "Preferred Time",
-                  prefixIcon: Icon(Icons.access_time, color: Colors.green),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+            Form(
+              key: _formKey, // Wrap with Form
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildTextField(
+                    "Full Name",
+                    _nameController,
+                    Icons.person,
+                    (value) => value!.isEmpty ? "Enter your name" : null,
                   ),
-                  filled: true,
-                  fillColor: Colors.green.shade50,
-                ),
-                items:
-                    timeSlots.map((time) {
-                      return DropdownMenuItem(value: time, child: Text(time));
-                    }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedTime = value;
-                  });
-                },
-              ),
-            ),
-
-            _buildTextField(
-              "Reason for Visit",
-              _reasonController,
-              Icons.message,
-            ),
-            _buildTextArea("Additional Notes (Optional)", _notesController),
-
-            // Confirm Booking Button
-            SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade700,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                  _buildTextField(
+                    "Email",
+                    _emailController,
+                    Icons.email,
+                    (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your email";
+                      }
+                      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return "Enter a valid email";
+                      }
+                      return null;
+                    },
                   ),
-                  elevation: 6,
-                ),
-                onPressed: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => PaymentScreen(
-        doctorName: widget.name,
-        specialization: widget.specialization,
-        fee: widget.fee,
-        appointmentDate: _dateController.text,
-        appointmentTime: selectedTime ?? "10:00 AM",
-      ),
-    ),
-  );
-},
-
-                child: Text(
-                  "Confirm Booking",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                    color: Colors.white
+                  _buildTextField(
+                    "Phone Number",
+                    _phoneController,
+                    Icons.phone,
+                    (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your phone number";
+                      }
+                      if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                        return "Enter a valid 10-digit phone number";
+                      }
+                      return null;
+                    },
                   ),
-                ),
+                  _buildDateField(context),
+                  
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Preferred Time",
+                        prefixIcon: Icon(Icons.access_time, color: Colors.green),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        filled: true,
+                        fillColor: Colors.green.shade50,
+                      ),
+                      items: timeSlots.map((time) {
+                        return DropdownMenuItem(value: time, child: Text(time));
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTime = value;
+                        });
+                      },
+                      validator: (value) =>
+                          value == null ? "Please select a time" : null,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                    ),
+                  ),
+            
+                  _buildTextField(
+                    "Reason for Visit",
+                    _reasonController,
+                    Icons.message,
+                    (value) => value!.isEmpty ? "Enter reason for visit" : null,
+                  ),
+                  _buildTextArea("Additional Notes (Optional)", _notesController),
+            
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade700,
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        elevation: 6,
+                      ),
+                      onPressed: _confirmBooking,
+                      child: Text(
+                        "Confirm Booking",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -250,10 +293,11 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
     String label,
     TextEditingController controller,
     IconData icon,
+    String? Function(String?)? validator,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
@@ -262,6 +306,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           filled: true,
           fillColor: Colors.green.shade50,
         ),
+        validator: validator,
       ),
     );
   }
@@ -269,7 +314,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Widget _buildDateField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: TextField(
+      child: TextFormField(
         controller: _dateController,
         readOnly: true,
         decoration: InputDecoration(
@@ -283,6 +328,8 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
             onPressed: () => _selectDate(context),
           ),
         ),
+        validator: (value) =>
+            value!.isEmpty ? "Please select a date" : null,
       ),
     );
   }
@@ -290,7 +337,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Widget _buildTextArea(String label, TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         maxLines: 3,
         decoration: InputDecoration(
