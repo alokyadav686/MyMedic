@@ -21,12 +21,10 @@ class PaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: NameHeaderWithoutChatbot(),
-      ),
+       appBar: PreferredSize(
+    preferredSize: Size.fromHeight(kToolbarHeight),
+    child: NameHeaderWithoutChatbot(),
+  ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(

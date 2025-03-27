@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_medic/constants/colors.dart';
-import 'package:my_medic/screen/chatbot/chatbot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NameHeaderWithoutChatbot extends StatefulWidget {
