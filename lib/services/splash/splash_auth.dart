@@ -11,9 +11,9 @@ class SplashServices {
 
       bool isAuthenticated = await AuthStorage.getAuthStatus();
 
-      await Future.delayed(Duration(microseconds: 20)); 
+      await Future.delayed(Duration(microseconds: 20)); // Add delay for splash effect
 
-      if (!context.mounted) return; 
+      if (!context.mounted) return; // Ensure context is valid before navigation
 
       if (isAuthenticated) {
         Navigator.pushReplacement(
