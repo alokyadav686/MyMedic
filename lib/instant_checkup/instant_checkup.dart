@@ -4,6 +4,8 @@ import 'package:my_medic/constants/colors.dart';
 import 'package:my_medic/services/api/api_services.dart' as ApiService;
 
 class HealthCheckupForm extends StatefulWidget {
+  const HealthCheckupForm({super.key});
+
   @override
   _HealthCheckupFormState createState() => _HealthCheckupFormState();
 }
@@ -56,7 +58,10 @@ class _HealthCheckupFormState extends State<HealthCheckupForm> {
         leading: IconButton(
           color: Colors.white,
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => BottomNavBar()),
+            );
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),

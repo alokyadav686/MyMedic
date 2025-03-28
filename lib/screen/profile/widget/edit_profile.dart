@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
+  const EditProfile({super.key});
+
   @override
   _EditProfileState createState() => _EditProfileState();
 }
@@ -158,7 +160,7 @@ class ProfileTextField extends StatelessWidget {
   final TextEditingController controller;
   final TextInputType keyboardType;
 
-  const ProfileTextField({required this.label, required this.controller, this.keyboardType = TextInputType.text});
+  const ProfileTextField({super.key, required this.label, required this.controller, this.keyboardType = TextInputType.text});
 
   @override
   Widget build(BuildContext context) {

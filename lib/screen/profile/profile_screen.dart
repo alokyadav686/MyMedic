@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_medic/screen/profile/widget/edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -160,7 +162,7 @@ class ProfileMenuItem extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const ProfileMenuItem({required this.icon, required this.text});
+  const ProfileMenuItem({super.key, required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
