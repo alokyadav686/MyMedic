@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class CategoryItem extends StatelessWidget {
   final String image;
   final String title;
+  final String price;
 
-  const CategoryItem({super.key, required this.image, required this.title});
+  const CategoryItem({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.price,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,15 @@ class CategoryItem extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.asset(image, fit: BoxFit.cover,),
+            child: Image.network(
+              image,
+              fit: BoxFit.cover,
+              errorBuilder:
+                  (context, error, stackTrace) => Image.asset(
+                    "assets/images/ayurveda.png",
+                    fit: BoxFit.cover,
+                  ),
+            ),
           ),
         ),
         const SizedBox(height: 6),
@@ -37,6 +51,15 @@ class CategoryItem extends StatelessWidget {
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '₹$price',
+          style: const TextStyle(
+            fontSize: 13,
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );

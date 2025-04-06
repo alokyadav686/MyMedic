@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_medic/screen/medicines/widgets/carousel_card.dart';
 import 'package:my_medic/screen/medicines/widgets/popular_categories.dart';
 import 'package:my_medic/screen/medicines/widgets/prescripsion.dart';
+import 'package:my_medic/services/api/api_services.dart' as ApiService;
 
 class Medicine extends StatefulWidget {
   const Medicine({super.key});
@@ -11,26 +12,26 @@ class Medicine extends StatefulWidget {
 }
 
 class _MedicineState extends State<Medicine> {
-  final List<Map<String, String>> categories = const [
-    {'image': 'assets/images/ayurveda.png', 'title': 'Nutritional Drinks'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Ayurveda'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Vitamins & Supplement'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Ayurveda'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Healthcare Devices'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Homeopathy'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Diabetes Care'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Diabetes Care'},
-  ];
-  final List<Map<String, String>> daily = const [
-    {'image': 'assets/images/ayurveda.png', 'title': 'Drinks'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Ayurveda'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Vitamins & Supplement'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Ayurveda'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Healthcare Devices'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Homeopathy'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Diabetes Care'},
-    {'image': 'assets/images/ayurveda.png', 'title': 'Diabetes Care'},
-  ];
+  List<dynamic> MedicineLists = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchMedicine();
+  }
+
+  Future fetchMedicine() async {
+    List<dynamic> data = await ApiService.getMedicine();
+
+    setState(() {
+      MedicineLists = data;
+    });
+  }
+
+  bool seeAll = false;
+  bool seeDailyUses = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +71,10 @@ class _MedicineState extends State<Medicine> {
             CarouselCard(),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -79,10 +83,14 @@ class _MedicineState extends State<Medicine> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'SEE ALL >',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    onPressed: () {
+                      setState(() {
+                        seeAll = !seeAll;
+                      });
+                    },
+                    child: Text(
+                      seeAll ? 'SEE LESS' : 'SEE ALL >',
+                      style: const TextStyle(color: Colors.blue, fontSize: 16),
                     ),
                   ),
                 ],
@@ -92,7 +100,7 @@ class _MedicineState extends State<Medicine> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: SizedBox(
-                height: 230, // Adjust height as needed
+                // height: 230, // Adjust height as needed
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -100,13 +108,20 @@ class _MedicineState extends State<Medicine> {
                     mainAxisSpacing: 12,
                     childAspectRatio: 0.8,
                   ),
-                  itemCount: categories.length,
+                  itemCount:
+                      seeAll
+                          ? MedicineLists.length
+                          : MedicineLists.length <= 8
+                          ? MedicineLists.length
+                          : 8,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    final medicine = MedicineLists[index];
                     return CategoryItem(
-                      image: categories[index]['image']!,
-                      title: categories[index]['title']!,
+                      image: medicine['image']!,
+                      title: medicine['name']!,
+                      price: medicine['price'].toString(),
                     );
                   },
                 ),
@@ -114,7 +129,10 @@ class _MedicineState extends State<Medicine> {
             ),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8.0,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -123,10 +141,14 @@ class _MedicineState extends State<Medicine> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'SEE ALL >',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                    onPressed: () {
+                      setState(() {
+                        seeDailyUses = !seeDailyUses;
+                      });
+                    },
+                    child: Text(
+                      seeDailyUses ? 'SEE LESS' : 'SEE ALL >',
+                      style: const TextStyle(color: Colors.blue, fontSize: 16),
                     ),
                   ),
                 ],
@@ -136,7 +158,7 @@ class _MedicineState extends State<Medicine> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: SizedBox(
-                height: 230, // Adjust height as needed
+                // height: 230, // Adjust height as needed
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
@@ -144,23 +166,51 @@ class _MedicineState extends State<Medicine> {
                     mainAxisSpacing: 12,
                     childAspectRatio: 0.8,
                   ),
-                  itemCount: categories.length,
+                  itemCount:
+                      seeDailyUses
+                          ? MedicineLists.where(
+                            (medicine) =>
+                                medicine['category']
+                                    ?.toString()
+                                    .toLowerCase() ==
+                                'daily uses',
+                          ).length
+                          : MedicineLists.where(
+                                (medicine) =>
+                                    medicine['category']
+                                        ?.toString()
+                                        .toLowerCase() ==
+                                    'daily uses',
+                              ).length <=
+                              8
+                          ? MedicineLists.where(
+                            (medicine) =>
+                                medicine['category']
+                                    ?.toString()
+                                    .toLowerCase() ==
+                                'daily uses',
+                          ).length
+                          : 8,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
+                    final dailyUsesMedicines =
+                        MedicineLists.where(
+                          (medicine) =>
+                              medicine['category']?.toString().toLowerCase() ==
+                              'daily uses',
+                        ).toList();
+
+                    final medicine = dailyUsesMedicines[index];
                     return CategoryItem(
-                      image: daily[index]['image']!,
-                      title: daily[index]['title']!,
+                      image: medicine['image'].toString(),
+                      title: medicine['name']!,
+                      price: medicine['price'].toString(),
                     );
                   },
                 ),
               ),
             ),
-            
-
-
-
-
           ],
         ),
       ),

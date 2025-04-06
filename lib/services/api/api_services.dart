@@ -29,3 +29,15 @@ Future<String> chatbot({required Map<String, String> message}) async {
     return "Error: ${e.toString()}";
   }
 }
+
+var medineApi = "https://mediconnect-pn3n.onrender.com/medicines/list-all";
+
+Future getMedicine() async {
+  var medicine = await http.get(Uri.parse(medineApi));
+
+  var MedicineList = jsonDecode(medicine.body);
+
+  if (medicine.statusCode == 200) {
+    return MedicineList;
+  }
+}
